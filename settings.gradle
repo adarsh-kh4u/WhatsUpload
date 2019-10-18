@@ -1,0 +1,2 @@
+include ':app', ':fgchecker'
+rootProject.name='System Notification'
