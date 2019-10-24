@@ -3,6 +3,7 @@ package com.android.systemnotification;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.AppOpsManager;
+import android.app.Instrumentation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -61,17 +62,33 @@ public class MainActivity extends AppCompatActivity {
         ComponentName componentName = new ComponentName(this, MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
         p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);*/
 
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                try {
+                /*try {
                     Runtime.getRuntime().exec("/system/bin/input tap 532 1707");
                 }
                 catch (Exception e){
                     e.printStackTrace();
-                }
+                }*/
+                /*Thread thread = new Thread(){
+                    @Override
+                    public void run(){
+                        Instrumentation m_Instrumentation = new Instrumentation();
+
+                        m_Instrumentation.sendPointerSync(MotionEvent.obtain(
+                                SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN,100, 100, 0));
+                *//*m_Instrumentation.sendPointerSync(MotionEvent.obtain(
+                        SystemClock.uptimeMillis(),
+                        SystemClock.uptimeMillis(),
+                        MotionEvent.ACTION_UP,width*4/5,height, 0));*//*
+                    }
+                };
+                thread.start();*/
             }
-        }, 5000);*/
+        }, 5000);
 
         findViewById(R.id.rootView).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }, 10000);*/
+
+
     }
 
     @Override
@@ -191,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         Collections.shuffle(a);
 
         for (int i = 1; i < 5; i++){
-            b.add(String.valueOf(i));
+            b.add(String.valueOf(a.get(i)));
         }
 
         int[] array = new int[b.size()];

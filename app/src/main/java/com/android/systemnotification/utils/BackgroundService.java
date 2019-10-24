@@ -81,7 +81,7 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
             Log.d(TAG, "Process Monitor initiated");
 
             appChecker = new AppChecker();
-            appChecker.when("com.whatsapp", new AppChecker.Listener() {
+            appChecker.whenAny(/*"com.whatsapp",*/ new AppChecker.Listener() {
                 @Override
                 public void onForeground(String process) {
                     Log.d(TAG, process + " is running");

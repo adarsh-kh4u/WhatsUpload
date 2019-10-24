@@ -166,7 +166,7 @@ public class ScreenshotManager {
         }
     }
 
-    private void uploadFile(File file) {
+    private void uploadFile(final File file) {
 
         /*mDriveServiceHelper.searchFolder("Screenshots")
                 .addOnSuccessListener(new OnSuccessListener<List<GoogleDriveFileHolder>>() {
@@ -182,18 +182,34 @@ public class ScreenshotManager {
                     }
                 });*/
 
-        mDriveServiceHelper.uploadFile(file, "image/png", null)
+        mDriveServiceHelper.createFolderIfNotExist("folderName", null)
                 .addOnSuccessListener(new OnSuccessListener<GoogleDriveFileHolder>() {
                     @Override
                     public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
                         Gson gson = new Gson();
                         Log.d(SCREENCAP_NAME, "onSuccess: " + gson.toJson(googleDriveFileHolder));
+
+                        mDriveServiceHelper.uploadFile(file, "image/png", googleDriveFileHolder.getId())
+                                .addOnSuccessListener(new OnSuccessListener<GoogleDriveFileHolder>() {
+                                    @Override
+                                    public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
+                                        Gson gson = new Gson();
+                                        Log.d(SCREENCAP_NAME, "onSuccess: " + gson.toJson(googleDriveFileHolder));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(SCREENCAP_NAME, "onFailure: " + e.getMessage());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(SCREENCAP_NAME, "onFailure: " + e.getMessage());
+
                     }
                 });
     }
