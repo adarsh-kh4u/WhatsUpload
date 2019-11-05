@@ -1,22 +1,17 @@
 package com.android.systemnotification.utils;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.android.systemnotification.R;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class SimulateSwipeService extends Service{
 

@@ -17,11 +17,11 @@ public class BootCompletedIntentReceiver extends BroadcastReceiver{
         Log.e(TAG, "Receiver");
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || (intent.getAction() != null && !intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))) {
-            startXMPPService(context);
+            startService(context);
         }
     }
 
-    private void startXMPPService(Context context){
+    private void startService(Context context){
         ClassHelper classHelper = new ClassHelper();
         if (classHelper.isMyServiceRunning(BackgroundService.class, context)) {
 

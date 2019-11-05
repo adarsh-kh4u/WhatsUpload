@@ -14,9 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/**
- * Created by Adarsh on 10/9/2019.
- */
 public class FileUtil {
     public String compressImage(String filePath) {
 

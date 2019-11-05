@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.android.systemnotification.MainActivity;
 
-
 public class Alarm extends BroadcastReceiver {
 
     final String TAG = Alarm.class.getSimpleName();
@@ -21,8 +20,7 @@ public class Alarm extends BroadcastReceiver {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "sys:not");
         wl.acquire();
 
-        //Put here YOUR code.
-        startXMPPService(context);
+        startService(context);
 
         wl.release();
     }
@@ -48,7 +46,7 @@ public class Alarm extends BroadcastReceiver {
         }
     }
 
-    private void startXMPPService(Context context){
+    private void startService(Context context){
 
         Log.d(TAG, "Alarm");
 

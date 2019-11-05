@@ -1,28 +1,12 @@
 package com.android.systemnotification.utils;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 import com.android.systemnotification.MainActivity;
 import com.rvalerio.fgchecker.AppChecker;
-
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Random;
 
 import androidx.annotation.Nullable;
 
@@ -81,7 +65,7 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
             Log.d(TAG, "Process Monitor initiated");
 
             appChecker = new AppChecker();
-            appChecker.whenAny(/*"com.whatsapp",*/ new AppChecker.Listener() {
+            appChecker.when("com.whatsapp", new AppChecker.Listener() {
                 @Override
                 public void onForeground(String process) {
                     Log.d(TAG, process + " is running");
