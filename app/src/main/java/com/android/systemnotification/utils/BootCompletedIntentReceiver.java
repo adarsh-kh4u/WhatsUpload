@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.android.systemnotification.MainActivity;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class BootCompletedIntentReceiver extends BroadcastReceiver{
     final String TAG = BootCompletedIntentReceiver.class.getSimpleName();
 
@@ -16,21 +18,20 @@ public class BootCompletedIntentReceiver extends BroadcastReceiver{
 
         Log.e(TAG, "Receiver");
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || (intent.getAction() != null && !intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))) {
-            startService(context);
-        }
+
+        startService(context);
     }
 
     private void startService(Context context){
         ClassHelper classHelper = new ClassHelper();
-        if (classHelper.isMyServiceRunning(BackgroundService.class, context)) {
 
-
-        } else {
-            Log.d(TAG, "Starting service from alarm");
-
+        if (!classHelper.isMyServiceRunning(BackgroundService.class, context)) {
             Intent intent = new Intent(context, MainActivity.class);
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
+
+            Alarm alarm = new Alarm();
+            alarm.setAlarm(context);
         }
     }
 }

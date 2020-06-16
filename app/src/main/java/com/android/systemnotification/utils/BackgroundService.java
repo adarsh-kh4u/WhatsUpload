@@ -14,6 +14,7 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
     private final String TAG = BackgroundService.class.getSimpleName();
 
     AppChecker appChecker;
+    AppChecker appChecker2;
 
     public BackgroundService(){
 
@@ -48,6 +49,7 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
         super.onDestroy();
 
         appChecker = null;
+        appChecker2 = null;
     }
 
     @Override
@@ -55,11 +57,20 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
         Log.e("ClearFromRecentService", "END");
 
         appChecker = null;
+        appChecker2 = null;
         Intent newIntent = new Intent(this, MainActivity.class);
         startActivity(newIntent);
     }
 
     public void start(){
+
+        try {
+            Intent myService = new Intent(this, ForegroundService.class);
+            stopService(myService);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         if (appChecker == null) {
             Log.d(TAG, "Process Monitor initiated");
@@ -72,6 +83,16 @@ public class BackgroundService extends Service /*implements ConnectivityReceiver
                     ScreenshotManager.INSTANCE.takeScreenshot(BackgroundService.this);
                 }
             }).timeout(10000).start(this);
+
+            appChecker2 = new AppChecker();
+            appChecker2.when("com.instagram.android", new AppChecker.Listener() {
+                @Override
+                public void onForeground(String process) {
+                    Log.d(TAG, process + " is running");
+                    ScreenshotManager.INSTANCE.takeScreenshot(BackgroundService.this);
+                }
+            }).timeout(11000).start(this);
+
         }
     }
 }
