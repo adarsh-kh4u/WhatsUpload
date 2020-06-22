@@ -24,7 +24,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation project(':fgchecker')
-    implementation 'com.github.ammarptn:GDrive-Rest-Android:1.4.2'
     // For Google login
     //implementation 'com.google.android.gms:play-services-auth:17.0.0'
     compile 'com.github.luongvo:GmailBackground:2.1.1'

